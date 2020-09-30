@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonMain;
     private EditText username;
     private EditText password;
-    private Gson gson = new Gson();
 
 
     @Override
@@ -43,7 +43,14 @@ public class MainActivity extends AppCompatActivity {
 
         buttonMain.setOnClickListener(
                 view -> {
-                    sendMessage("Click desde cliente");
+                    Gson gson = new Gson();
+                    String name = username.getText().toString();
+                    String passport = password.getText().toString();
+                    String id = UUID.randomUUID().toString();
+                    User userData = new User(name,passport,id);
+
+                    String json = gson.toJson(userData);
+                    sendMessage(json);
                 }
         );
     }
