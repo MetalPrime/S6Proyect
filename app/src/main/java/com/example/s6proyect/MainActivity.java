@@ -2,10 +2,12 @@ package com.example.s6proyect;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonMain;
     private EditText username;
     private EditText password;
+    private boolean onActive;
 
 
     @Override
@@ -40,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
 
         initCliente();
+
+        onActive = true;
 
         buttonMain.setOnClickListener(
                 view -> {
@@ -72,15 +77,37 @@ public class MainActivity extends AppCompatActivity {
                         OutputStreamWriter osw = new OutputStreamWriter(os);
                         writer = new BufferedWriter(osw);
 
-                        while(true) {
-                            System.out.println("Esperando...");
-                            //No se define hasta que el cliente manda un elemento
-                            String line = reader.readLine();
-                            System.out.println("Recibido");
-                            System.out.println("Recibido" + line + '\n');
+                        System.out.println("Esperando...");
+                        //No se define hasta que el cliente manda un elemento
+                        String line = reader.readLine();
+                        System.out.println("Conectado");
+                        Log.w("Answer","Recibido" + line + '\n');
+
+                        while(onActive) {
+
+                            Thread.sleep(1000);
+
+
+                            if(line!=null){
+
+                                runOnUiThread(
+                                        () ->{
+
+                                           // Toast.makeText(this,line+"",Toast.LENGTH_SHORT).show();
+                                            if(line.equals("Bienvenido")){
+                                                Intent i = new Intent(this,ResultActivity.class);
+                                                startActivity(i);
+                                                Log.e("Funciona", "inicioo");
+                                                onActive = false;
+                                            }
+                                        }
+                                );
+
+                            }
+
                         }
 
-                    } catch (IOException e) {
+                    } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
