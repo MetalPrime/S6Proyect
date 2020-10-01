@@ -78,28 +78,36 @@ public class MainActivity extends AppCompatActivity {
                         writer = new BufferedWriter(osw);
 
                         System.out.println("Esperando...");
-                        //No se define hasta que el cliente manda un elemento
-                        String line = reader.readLine();
-                        System.out.println("Conectado");
-                        Log.w("Answer","Recibido" + line + '\n');
+
 
                         while(onActive) {
+                            //No se define hasta que el cliente manda un elemento
+                            String line = reader.readLine();
+                            System.out.println("Conectado");
+                            Log.w("Answer","Recibido" + line + '\n');
+                            Gson gsonMessage = new Gson();
+                            Message recibeMsg = gsonMessage.fromJson(line,Message.class);
 
-                            Thread.sleep(1000);
 
 
                             if(line!=null){
 
                                 runOnUiThread(
                                         () ->{
+                                            if(recibeMsg!=null){
+                                                Log.e("Estado",recibeMsg.getMessage());
+                                                if(recibeMsg.getMessage().equals("Bienvenido")) {
+                                                    Intent i = new Intent(this, ResultActivity.class);
+                                                    startActivity(i);
+                                                    Log.e("Funciona", "inicioo");
+                                                    Toast.makeText(this, recibeMsg.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    onActive = false;
 
-                                           // Toast.makeText(this,line+"",Toast.LENGTH_SHORT).show();
-                                            if(line.equals("Bienvenido")){
-                                                Intent i = new Intent(this,ResultActivity.class);
-                                                startActivity(i);
-                                                Log.e("Funciona", "inicioo");
-                                                onActive = false;
+                                                } else {
+                                                    Toast.makeText(this, recibeMsg.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
                                             }
+
                                         }
                                 );
 
@@ -107,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
                         }
 
-                    } catch (IOException | InterruptedException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
