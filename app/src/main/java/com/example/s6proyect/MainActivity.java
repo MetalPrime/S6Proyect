@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.UUID;
 
@@ -100,11 +101,24 @@ public class MainActivity extends AppCompatActivity {
                                                     Intent i = new Intent(this, ResultActivity.class);
                                                     startActivity(i);
                                                     Log.e("Funciona", "inicioo");
-                                                    Toast.makeText(this, recibeMsg.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    byte [] mensajeBytes = recibeMsg.getMessage().getBytes();
+                                                    try {
+                                                        String utf = new String(mensajeBytes,"UTF-8");
+                                                        Toast.makeText(this, utf, Toast.LENGTH_SHORT).show();
+                                                    } catch (UnsupportedEncodingException e) {
+                                                        e.printStackTrace();
+                                                    }
+
                                                     onActive = false;
 
                                                 } else {
-                                                    Toast.makeText(this, recibeMsg.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    byte [] mensajeBytes = recibeMsg.getMessage().getBytes();
+                                                    try {
+                                                        String utf = new String(mensajeBytes,"UTF-8");
+                                                        Toast.makeText(this, utf, Toast.LENGTH_SHORT).show();
+                                                    } catch (UnsupportedEncodingException e) {
+                                                        e.printStackTrace();
+                                                    }
                                                 }
                                             }
 
